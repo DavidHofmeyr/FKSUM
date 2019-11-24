@@ -1,0 +1,10 @@
+useDynLib(FKSUM, .registration=TRUE)
+exportPattern("^[[:alpha:]]+")
+importFrom("Rcpp", "evalCpp")
+importFrom("rARPACK", "eigs_sym")
+importFrom("MASS", "Null")
+importFrom("graphics", "plot")
+importFrom("stats", "cov", "optim", "optimise", "rnorm", "sd")
+export("fk_ppr", "predict.fk_ppr", "fk_sum", "fk_ICA", "fk_density", "fk_regression", "roughness_K",
+       "var_K", "norm_K", "norm_const_K", "h_Gauss_to_K", "h_K_to_Gauss", "plot_kernel", "fk_mdh")
+S3method(predict, fk_ppr)

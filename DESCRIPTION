@@ -1,0 +1,16 @@
+Package: FKSUM
+Type: Package
+Title: Fast Kernel Sums
+Version: 0.1.0
+Author: David P. Hofmeyr
+Maintainer: David P. Hofmeyr <dhofmeyr@sun.ac.za>
+Description: Implements the method of Hofmeyr, D.P. (2019) <10.1109/TPAMI.2019.2930501> for fast evaluation of univariate kernel smoothers based on recursive computations.
+  Applications to the basic problems of density and regression function estimation are provided, as well as some projection pursuit methods
+  for which the objective is based on non-parametric functionals of the projected density, or conditional density of a response given projected
+  covariates.
+License: GPL
+Encoding: UTF-8
+Depends: Rcpp (>= 0.12.16)
+Imports: rARPACK, MASS
+LinkingTo: Rcpp, RcppArmadillo
+LazyData: true
