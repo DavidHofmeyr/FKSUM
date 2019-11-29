@@ -5,7 +5,7 @@ fk_regression <- function(x, y, h = 'amise', beta = NULL, from = NULL, to = NULL
     xo <-  x[o]
     yo <- y[o]
   }
-  else if(is.null(nbin)){
+  else if(!is.null(nbin)){
     xo <- x
     yo <- y
   }
@@ -38,7 +38,7 @@ fk_regression <- function(x, y, h = 'amise', beta = NULL, from = NULL, to = NULL
   }
   else if(h=='cv'){
     if(!is.null(nbin)){
-      cat('Cross validation bandwidth estimation not implemented for binned estimator.
+      message('Cross validation bandwidth estimation not implemented for binned estimator.
           Switching to AMISE optimal estimate \n')
       return(fk_regression(x, y, h = 'amise', beta, from, to, ngrid, nbin, type))
     }
