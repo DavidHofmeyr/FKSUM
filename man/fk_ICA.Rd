@@ -27,6 +27,8 @@ fk_ICA(X, ncomp = 1, beta = c(.25,.25), hmult=1.2, it=20, nbin = NULL)
 Hofmeyr, D.P. (2019) "Fast exact evaluation of univariate kernel sums", \emph{IEEE Transactions on Pattern Analysis and Machine Intelligence}, in press.
 }
 \examples{
+op <- par(no.readonly = TRUE)
+
 set.seed(1)
 
 ### Generate a set of data with 5 non-Gaussian components
@@ -53,5 +55,7 @@ model <- fk_ICA(XX, ncol(XX))
 par(mfrow = c(1, 5))
 
 for(i in 1:5) plot(density(model$S[,i]))
+
+par(op)
 }
 \keyword{file}

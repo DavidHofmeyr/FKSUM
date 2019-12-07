@@ -27,6 +27,8 @@ Pavlidis N.G., Hofmeyr D.P., Tasoulis S.K. (2016) "Minimum Density Hyperplanes",
 Hofmeyr, D.P. (2019) "Fast exact evaluation of univariate kernel sums", \emph{IEEE Transactions on Pattern Analysis and Machine Intelligence}, in press.
 }
 \examples{
+op <- par(no.readonly = TRUE)
+
 set.seed(1)
 
 ### Generate data from a simple 10 component mixture model in 10 dimensions:
@@ -69,5 +71,7 @@ plot(fk_density(X\%*\%mdh$v), type = 'l', xlab = 'x', ylab = 'f(x)')
 abline(v = mdh$b, col = 2)
 plot(fk_density(X\%*\%eigen(cov(X))$vectors[,1]), type = 'l',
     xlab = 'x', ylab = 'f(x)')
+
+par(op)
 }
 \keyword{file}

@@ -37,6 +37,8 @@ fk_ppr(X, y, nterms=1, hmult=1, betas=NULL, loss=NULL,
 Hofmeyr, D.P. (2019) "Fast exact evaluation of univariate kernel sums", \emph{IEEE Transactions on Pattern Analysis and Machine Intelligence}, in press.
 }
 \examples{
+op <- par(no.readonly = TRUE)
+
 set.seed(2)
 
 ### Generate a set of data
@@ -93,7 +95,9 @@ plot(X[-train_ids,]\%*\%model1$vs[2,], y[-train_ids])
 plot(X[-train_ids,]\%*\%model2$vs[1,], y[-train_ids])
 plot(X[-train_ids,]\%*\%model2$vs[2,], y[-train_ids])
 
-### estimate comparative estimated coefficients of determination
+par(op)
+
+### Estimate comparative estimated coefficients of determination
 
 MSE1 = mean((predict(model1, X[-train_ids,])-y[-train_ids])^2)
 MSE2 = mean((predict(model2, X[-train_ids,])-y[-train_ids])^2)

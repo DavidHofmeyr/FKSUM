@@ -18,6 +18,8 @@
   A vector of predictions for Xtest.
 }
 \examples{
+op <- par(no.readonly = TRUE)
+
 set.seed(2)
 
 ### Generate a set of data
@@ -73,6 +75,8 @@ plot(X[-train_ids,]\%*\%model1$vs[1,], y[-train_ids])
 plot(X[-train_ids,]\%*\%model1$vs[2,], y[-train_ids])
 plot(X[-train_ids,]\%*\%model2$vs[1,], y[-train_ids])
 plot(X[-train_ids,]\%*\%model2$vs[2,], y[-train_ids])
+
+par(op)
 
 ### estimate comparative estimated coefficients of determination
 

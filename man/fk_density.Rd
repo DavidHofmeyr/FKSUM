@@ -32,6 +32,8 @@ Hofmeyr, D.P. (2019) "Fast exact evaluation of univariate kernel sums", \emph{IE
 Silverman, B. (1986) \emph{Density estimation for statistics and data analysis}, volume 26. CRC press.
 }
 \examples{
+op <- par(no.readonly = TRUE)
+
 set.seed(1)
 
 ### generate a bimodal Gaussian mixture sample with 100000 points
@@ -85,7 +87,7 @@ plot(xs, ftrue, type = 'l', lwd = 4, col = rgb(.7, .7, .7),
 lines(fhat_bin, lty = 2)
 
 
-
+par(op)
 
 
 # --------- Example 2: Evaluation at sample --------------#

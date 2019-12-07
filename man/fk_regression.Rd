@@ -34,6 +34,8 @@ Nadaraya, E.A. (1964) "On estimating regression." \emph{Theory of Probability \&
 Watson, G.S. (1964) "Smooth regression analysis." \emph{Sankhya: The Indian Journal of Statistics}, Series A, pp. 359–372.
 }
 \examples{
+op <- par(no.readonly = TRUE)
+
 set.seed(1)
 
 n <- 2000
@@ -74,5 +76,7 @@ plot(x, y, col = rgb(.7, .7, .7, .3), pch = 16,, xlab = 'x',
     ylab = 'x', main = 'NW estimator with cv bandwidth')
 lines(xs, ftrue, col = 2, lwd = 3)
 lines(fhat_NW, lty = 3, lwd = 2)
+
+par(op)
 }
 \keyword{file}
