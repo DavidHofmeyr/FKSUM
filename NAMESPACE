@@ -1,5 +1,4 @@
 useDynLib(FKSUM, .registration=TRUE)
-exportPattern("^[[:alpha:]]+")
 importFrom("Rcpp", "evalCpp")
 importFrom("rARPACK", "eigs_sym")
 importFrom("MASS", "Null")
