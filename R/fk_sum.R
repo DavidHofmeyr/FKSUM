@@ -1,7 +1,21 @@
-fk_sum <- function(x, omega, h, x_eval = NULL, beta = c(.25,.25), nbin = NULL, type = "ksum"){
+# fk_sum returns kernel weighted sum, and/or kernel derivative weighted sum of terms omega based on locations x
+# Arguments:
+# x = vector sample points / kernel locations
+# omega = vector of terms to be summed
+# h = positive numeric bandwidth for kernel weights
+# x_eval = points at which to evaluate sums. Default is evaluation at the sample points themselves
+# beta = vector of kernel coefficients. Default is c(.25, .25)
+# nbin = number of bins if binning approximation desired. Default is exact evaluation (nbin = NULL)
+# type = one of 'ksum' for kernel weighted sum, 'dksum' for kernel derivative weighted sum,
+#         or 'both' for both. Default is the kernel weighted sums (i.e. type is 'ksum')
+#
+# returns a vector of kernel or kernel derivative sums if type is 'ksum' or 'dksum', or a matrix
+# with first column the kernel sums and second column the kernel derivative sums if type  is 'both'
+
+fk_sum <- function(x, omega, h, x_eval = NULL, beta = c(.25, .25), nbin = NULL, type = "ksum"){
   n <- length(x)
   mn <- mean(x)
-  x <- x-mn
+  x <- x - mn
   if(is.null(nbin)){
     o <- order(x)
     xo <- x[o]

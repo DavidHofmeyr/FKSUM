@@ -17,7 +17,7 @@ ksum <- function(x, y, x_eval, h, betas, Counts = numeric(1)) {
     .Call(`_FKSUM_ksum`, x, y, x_eval, h, betas, Counts)
 }
 
-dksum <- function(x, y, x_eval, h, betas, Counts = numeric(0)) {
+dksum <- function(x, y, x_eval, h, betas, Counts = numeric(1)) {
     .Call(`_FKSUM_dksum`, x, y, x_eval, h, betas, Counts)
 }
 
