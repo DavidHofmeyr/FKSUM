@@ -45,7 +45,7 @@ double fk_md(NumericVector x, NumericVector y, NumericVector x_eval, double h, N
   double miny;
   double stdv; /* to be standard deviation of x */
   NumericVector df(n_eval); /* to store the scaled density derivatives at x_eval */
-  if(al > .0000000000000000000000000001){
+  if(al > 1e-10){
     /* if al is very small, then assumed location of hyperplane at mean(x) = 0.
      * In this case al is not close to zero and so we search for the minimum density location
      * and the value of the minimum
@@ -134,9 +134,9 @@ double fk_md(NumericVector x, NumericVector y, NumericVector x_eval, double h, N
      * lowest density hyperplane to be returned once all minima have been considered.
      */
     double f_at_min, df_at_min, lo, hi, mid; /* lo, hi, mid are the lower/upper/middle points for binary search interval */
-    miny = 10000000000000;
+    miny = 1e10;
     int pos = 0; /* location index over which to search */
-    double eps = pow(0.1, 10); /* tolerance for derivative at local minimum, and for width of binary search interval */
+    double eps = 1e-10; /* tolerance for derivative at local minimum, and for width of binary search interval */
     while(pos<(n_eval - 1)){
       if(df[pos] < 0 && df[pos + 1] > 0){
         /* a local minimum between x_eval[pos] and x_eval[pos+1] */
@@ -237,7 +237,7 @@ NumericVector fk_md_dp(NumericVector xo, NumericVector y, NumericVector x_eval, 
   double minx = 0; /* location of minimum density hyperplane, i.e., f(minx) = miny. Important for derivatives. */
   double stdv;
   NumericVector df(n_eval);
-  if(al > .00000000000000000000000000001){
+  if(al > 1e-10){
     double var = 0;
     NumericVector x(n);
     for(int i = 0; i < n; i++){
@@ -305,9 +305,9 @@ NumericVector fk_md_dp(NumericVector xo, NumericVector y, NumericVector x_eval, 
       if(x_eval[i]>(al * stdv)) df[i] += 2.0 * C * (-al * stdv + x_eval[i]);
     }
     double f_at_min, df_at_min, lo, hi, mid;
-    miny = 10000000000000;
+    miny = 1e10;
     int pos = 0;
-    double eps = pow(0.1, 10);
+    double eps = 1e-10;
     while(pos < (n_eval - 1)){
       if(df[pos] < 0 && df[pos + 1] > 0){
         df_at_min = 1.0;
@@ -416,14 +416,14 @@ double fk_is_minim_md(NumericVector x, NumericVector y, NumericVector x_eval, do
   double stdv;
   /* mode1 and modef are the leftmost and rightmost modes of the density estimated from x */
   double modef;
-  double mode1 = pow(10, 20); /* mode1 is first set to a large number so that it is easy to determine if it has yet been set during search */
+  double mode1 = 1e10; /* mode1 is first set to a large number so that it is easy to determine if it has yet been set during search */
 
   /* derivative of density and of penalty are separated since their sum determines the location of
    * the minimum, minx, but we care if it lies between local maxima of the density only.
    */
   NumericVector df(n_eval);
   NumericVector dfpen(n_eval);
-  if(al > .0000000000000000000000000001){
+  if(al > 1e-10){
     double var = 0;
     for(int i = 0; i < n; i++) var += x[i] * x[i];
     var /= (n - 1);
@@ -488,9 +488,9 @@ double fk_is_minim_md(NumericVector x, NumericVector y, NumericVector x_eval, do
       if(x_eval[i] > (al * stdv)) dfpen[i] += 2.0 * C * (-al * stdv + x_eval[i]);
     }
     double f_at_min, df_at_min, lo, hi, mid;
-    miny = 10000000000000;
+    miny = 1e10;
     int pos = 0;
-    double eps = pow(0.1, 10);
+    double eps = 1e-10;
     /* when looping over x_eval to find the location of minima and maxima, we also
      * store the locations of the first and final mode (local maximum) of the density.
      */
@@ -584,7 +584,7 @@ double fk_md_b(NumericVector x, NumericVector y, NumericVector x_eval, double h,
   double minx = 0;
   double stdv;
   NumericVector df(n_eval);
-  if(al > .0000000000000000000000000001){
+  if(al > 1e-10){
     double var = 0;
     for(int i = 0; i < n; i++) var += x[i] * x[i];
     var /= (n - 1);
@@ -649,9 +649,9 @@ double fk_md_b(NumericVector x, NumericVector y, NumericVector x_eval, double h,
       if(x_eval[i] > (al * stdv)) df[i] += 2.0 * C * (-al * stdv + x_eval[i]);
     }
     double f_at_min, df_at_min, lo, hi, mid;
-    miny = 10000000000000;
+    miny = 1e10;
     int pos = 0;
-    double eps = pow(0.1, 10);
+    double eps = 1e-10;
     while(pos < (n_eval - 1)){
       if(df[pos] < 0 && df[pos + 1] > 0){
         df_at_min = 1.0;
