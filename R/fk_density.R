@@ -49,7 +49,7 @@ fk_density <- function(x, h = 'Silverman', h_adjust = 1, beta = NULL, from = NUL
         xs <- seq(frm, tot, length = nbin)
         loo_cv <- function(h){
           hf <- ksum(xs, wts / (n - 1) / h, xs, h, beta, 1:nbin) - beta[1] / (n - 1) / h
-          hf[hf < 1e-320] <- 1e-320 # leave-one-out values may be evaluated numerically to be zero, so buffer at 10^-300
+          hf[hf < 1e-20] <- 1e-20 # leave-one-out values may be evaluated numerically to be zero, so buffer at small value
           sum(log(hf) * wts)
         }
         h <- suppressWarnings(optimise(loo_cv, sd(x) / n^.2 * c(.05, 5), maximum = TRUE)$maximum)
@@ -57,7 +57,7 @@ fk_density <- function(x, h = 'Silverman', h_adjust = 1, beta = NULL, from = NUL
       else{
         loo_cv <- function(h){
           hf <- ksum(xo, rep(1 / (n - 1) / h, n), xo, h, beta, 1:n) - beta[1] / (n - 1) / h
-          hf[hf < 1e-320] <- 1e-320
+          hf[hf < 1e-20] <- 1e-20
           sum(log(hf))
         }
         h <- suppressWarnings(optimise(loo_cv, sd(x) / n^.2 * c(.05, 5), maximum = TRUE)$maximum)
