@@ -21,7 +21,11 @@ NumericVector cbin_alloc(NumericVector x, int nbin, double min, double max){
   double skip = (nbin - 1.0) / (max - min); /* skip is the width of a bin */
 
   /* i-th output is based on the floor of the multiple of bins from the lower bound, min */
-  for(int i = 0; i < n; i++) output[i] = floor((x[i] - min) * skip) + 1;
+  for(int i = 0; i < n; i++){
+    output[i] = floor((x[i] - min) * skip) + 1;
+    if(output[i] < 0) output[i] = 0;
+    if(output[i] > n) output[i] = n;
+  }
   return output;
 }
 
