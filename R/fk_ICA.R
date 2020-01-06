@@ -75,7 +75,7 @@ df_ica <- function(w, X, h, betas, nbin = NULL){
 
     # compute other components of partial derivatives of -entropy w.r.t. projected points
     dhf <- -dksum(xo, rep(1, n), xo, h, betas, 1:n) / h
-    d2 <- -dksum(xo, 1/hf, xo, h, betas, 1:n)/h
+    d2 <- -dksum(xo, 1 / hf, xo, h, betas, 1:n) / h
 
     # dp represents the partial derivatives of -entropy w.r.t. projected points
     dp <- (d2 + dhf / hf)
@@ -98,7 +98,7 @@ df_ica <- function(w, X, h, betas, nbin = NULL){
     hf <- ksum(xs, ynew, xs, h, betas, 1:nbin)
     hf[which(hf < 1e-300)] <- 1e-300
     dhf <- - dksum(xs, ynew, xs, h, betas, 1:nbin) / h
-    ynew <- bin_wts(xs, 1/hf*ynew, nbin, m, M)
+    ynew <- bin_wts(xs, 1 / hf * ynew, nbin, m, M)
     d2 <- - dksum(xs, ynew, xs, h, betas, 1:nbin) / h
     dp <- (d2 + dhf / hf)
 
@@ -130,7 +130,7 @@ df_ica <- function(w, X, h, betas, nbin = NULL){
 # $S = independent components, i.e., S = sweep(X, 2, colMeans(X), '-')%*%K%*%W
 
 
-fk_ICA <- function(X, ncomp = 1, beta = c(.25, .25), hmult = 1.2, it = 20, nbin = NULL){
+fk_ICA <- function(X, ncomp = 1, beta = c(.25, .25), hmult = 1.5, it = 20, nbin = NULL){
   dim <- ncomp
   n <- nrow(X)
 
@@ -160,32 +160,32 @@ fk_ICA <- function(X, ncomp = 1, beta = c(.25, .25), hmult = 1.2, it = 20, nbin 
     # compute bandwidth using hmult*h(Silverman)
     h <- hmult * (norm_K(beta)^2 / var_K(beta)^2 * 8 * sqrt(pi) / 3 / nrow(X))^(1 / 5)
 
-    # the following is a very simple gradient descent. optim could also be used, but
+    # the following is a very simple gradient ascent. optim could also be used, but
     # this has been found to work efficiently and effectively for ICA
     for(iter in 1:it){
       fval <- f_ica(v0, Y, h, beta, nbin) # function value at current iterate
       dir <- c(df_ica(v0, Y, h, beta, nbin)) # search direction
       ndir <- sqrt(sum(dir^2))
-      dir <- dir/ndir
+      dir <- dir / ndir
       stp <- .5 # step size for backtracking line-search
       repeat{ # line-search
-        fnew <- f_ica(v0+stp*dir, Y, h, beta, nbin)
-        if(fnew>(fval/.99999)) break
-        else stp <- stp*.5
-        if(stp<1e-9) break
+        fnew <- f_ica(v0 + stp * dir, Y, h, beta, nbin)
+        if(fnew > (fval / .99999)) break
+        else stp <- stp * .5
+        if(stp < 1e-9) break
       }
-      v0 <- v0+stp*dir
-      v0 <- v0/sqrt(sum(v0^2))
-      if(stp<1e-9) break
+      v0 <- v0 + stp * dir
+      v0 <- v0 / sqrt(sum(v0^2))
+      if(stp < 1e-9) break
     }
-    v0 <- v0/sqrt(sum(v0^2))
+    v0 <- v0 / sqrt(sum(v0^2))
 
     # if this is not the first component, then ensure orthogonality
     # is retained
-    if(i>1){
-      for(j in 1:(i-1)){
-        v0 <- v0-(v0%*%V[,j])[1]*V[,j]
-        v0 <- v0/sqrt(sum(v0^2))
+    if(i > 1){
+      for(j in 1:(i - 1)){
+        v0 <- v0 - (v0 %*% V[,j])[1] * V[,j]
+        v0 <- v0 / sqrt(sum(v0^2))
       }
     }
 
@@ -193,11 +193,11 @@ fk_ICA <- function(X, ncomp = 1, beta = c(.25, .25), hmult = 1.2, it = 20, nbin 
     # ensure it isn't rediscovered. This is a common approach in
     # projection pursuit to avoid having to use a constrained
     # optimisation implementation
-    Y <- Y-Y%*%v0%*%t(v0)
+    Y <- Y - Y %*% v0 %*% t(v0)
     V[,i] <- v0
   }
   V[,dim] <- Null(V[,1:(dim-1)])
-  list(X = X, K = W$E$vectors[,1:dim]%*%diag(1/sqrt(W$E$values[1:dim])), W = V, S = W$Y%*%V)
+  list(X = X, K = W$E$vectors[,1:dim] %*% diag(1 / sqrt(W$E$values[1:dim])), W = V, S = W$Y %*% V)
 }
 
 
@@ -215,12 +215,12 @@ whiten <- function(X, ncomp){
 
   # if data are relatively high dimensional then use iterative eigen-solver
   # from rARPACK. Otherwise use standard function eigen()
-  if(ncol(X)>300) E <- eigs_sym(cov(X),ncomp)
+  if(ncol(X) > 300) E <- eigs_sym(cov(X), ncomp)
   else E <- eigen(cov(X))
 
   # if not sufficient rank, use pseudo-inverse components
-  E$values[which(E$values<1e-10)] <- Inf
-  Y <- t(t(X)-colMeans(X))%*%E$vectors[,1:ncomp]%*%diag(1/sqrt(E$values[1:ncomp]))
+  E$values[which(E$values < 1e-10)] <- Inf
+  Y <- t(t(X) - colMeans(X)) %*% E$vectors[, 1:ncomp] %*% diag(1 / sqrt(E$values[1:ncomp]))
   list(E = E, Y = Y)
 }
 

@@ -21,7 +21,14 @@
 
 
 fk_regression <- function(x, y, h = 'amise', beta = NULL, from = NULL, to = NULL, ngrid = 1000, nbin = NULL, type = 'loc-lin'){
+
   n <- length(x)
+
+  # computation is slightly more stable for smaller magnitude kernel locations, so centralise x at zero
+  mn <- mean(x)
+  x <- x - mn
+  if(!is.null(from)) from <- from - mn
+  if(!is.null(to)) to <- to - mn
 
   # if exact evaluation performed then fast kernel computations require sorted data
   if(is.null(nbin) & is.unsorted(x)){
@@ -120,28 +127,28 @@ fk_regression <- function(x, y, h = 'amise', beta = NULL, from = NULL, to = NULL
     if(is.null(from)) from <- min(x)
     if(is.null(to)) to <- max(x)
     if(type=='loc-lin'){
-      list(x = seq(from, to, length = nbin), y = fk_loc_lin(xo, yo, h, beta, nbin = nbin, from = from, to = to), h = h)
+      list(x = seq(from, to, length = nbin) + mn, y = fk_loc_lin(xo, yo, h, beta, nbin = nbin, from = from, to = to), h = h)
     }
     else{
-      list(x = seq(from, to, length = nbin), y = fk_NW(xo, yo, h, beta, nbin = nbin, from = from, to = to), h = h)
+      list(x = seq(from, to, length = nbin) + mn, y = fk_NW(xo, yo, h, beta, nbin = nbin, from = from, to = to), h = h)
     }
   }
   else if(!is.null(ngrid)){ # exact grid evaluation, hence x_eval is a grid and regression function estimated with nbin = NULL (default)
     if(is.null(from)) from <- xo[1]
     if(is.null(to)) to <- xo[n]
     if(type=='loc-lin'){
-      list(x = seq(from, to, length = ngrid), y = fk_loc_lin(xo, yo, h, beta, ngrid = ngrid, from = from, to = to), h = h)
+      list(x = seq(from, to, length = ngrid) + mn, y = fk_loc_lin(xo, yo, h, beta, ngrid = ngrid, from = from, to = to), h = h)
     }
     else{
-      list(x = seq(from, to, length = ngrid), y = fk_NW(xo, yo, h, beta, ngrid = ngrid, from = from, to = to), h = h)
+      list(x = seq(from, to, length = ngrid) + mn, y = fk_NW(xo, yo, h, beta, ngrid = ngrid, from = from, to = to), h = h)
     }
   }
   else{ # exact evaluation at sample, hence both nbin and ngrid left as default (NULL) in regression computation
     if(type=='loc-lin'){
-      list(x = xo, y = fk_loc_lin(xo, yo, h, beta), h = h)
+      list(x = xo + mn, y = fk_loc_lin(xo, yo, h, beta), h = h)
     }
     else{
-      list(x = xo, y = fk_NW(xo, yo, h, beta), h = h)
+      list(x = xo + mn, y = fk_NW(xo, yo, h, beta), h = h)
     }
   }
 }
@@ -237,6 +244,7 @@ fk_NW <- function(x, y, h, beta, nbin = NULL, ngrid = NULL, from = NULL, to = NU
     wts1 <- sm_bin_wts(x, rep(1, n), nbin, xs[1], xs[nbin])
     wtsy <- sm_bin_wts(x, y, nbin, xs[1], xs[nbin])
     sK <- ksum(xs, wts1, xs, h, beta, 1:nbin) - loo * beta[1]
+    sK[sK < 1e-20] <- 1e-20
     sKy <- ksum(xs, wtsy, xs, h, beta, 1:nbin) - loo * beta[1] * wtsy / wts1
     sKy / sK
   }
@@ -250,6 +258,7 @@ fk_NW <- function(x, y, h, beta, nbin = NULL, ngrid = NULL, from = NULL, to = NU
   }
   else{
     sK <- ksum(x, rep(1, n), x, h, beta, 1:n) - loo * beta[1]
+    sK[sK < 1e-20] <- 1e-20
     sKy <- ksum(x, y, x, h, beta, 1:n) - loo * beta[1] * y
     sKy / sK
   }

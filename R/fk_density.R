@@ -101,7 +101,7 @@ fk_density <- function(x, h = 'Silverman', h_adjust = 1, beta = NULL, from = NUL
       xs <- x_eval
     }
   }
-  else if(!is.null(ngrid)){ # exact evaluation on a grid
+  else if(!is.null(ngrid) && is.null(x_eval)){ # exact evaluation on a grid
 
     # establish range for grid
     if(is.null(from)) from <- xo[1] - 6 * h
@@ -127,6 +127,10 @@ fk_density <- function(x, h = 'Silverman', h_adjust = 1, beta = NULL, from = NUL
     # evaluate density at evaluation points
     y <- ksum(xo, rep(1, n), xe, h, beta)[match(xs, xe)] / n / h
   }
+
+  # in cases where x_eval contains values very far from actual sample, then numerical issues can make the outputs from c++ functions include NA or +- Inf. We set these to very small positive value
+
+  y[is.na(y) | !is.finite(y)] <- 1e-300
 
   # return evaluation points (ensure to add the mean which was subtracted initially) and corresponding density values, plus bandwidth
   list(x = xs + mn, y = y, h = h)
